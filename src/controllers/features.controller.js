@@ -1,11 +1,11 @@
-const productsService = require("../services/products.service")
+const featuresService = require("../services/features.service")
 
-const productsController = {
+const featuresController = {
     findAll: async (req, res, next) => {
         try {
             res
                 .status(200)
-                .json(await productsService.findAll(req))
+                .json(await featuresService.findAll(req))
         } catch (error) {
             next({
                 status: 418,
@@ -18,7 +18,7 @@ const productsController = {
         try {
             res
                 .status(200)
-                .json(await productsService.findById(req))
+                .json(await featuresService.findById(req))
         } catch (error) {
             next({
                 status: 418,
@@ -31,7 +31,7 @@ const productsController = {
         try {
             res
                 .status(201)
-                .json(await productsService.create(req))
+                .json(await featuresService.create(req))
         } catch (error) {
             next({
                 status: 418,
@@ -44,7 +44,7 @@ const productsController = {
         try {
             res
                 .status(200)
-                .json(await productsService.update(req))
+                .json(await featuresService.update(req))
         } catch (error) {
             next({
                 status: 418,
@@ -55,7 +55,7 @@ const productsController = {
     },
     delete: async (req, res, next) => {
         try {
-            await productsService.delete(req)
+            await featuresService.delete(req)
             res
                 .status(200)
                 .end()
@@ -69,4 +69,4 @@ const productsController = {
     }
 }
 
-module.exports = productsController
+module.exports = featuresController

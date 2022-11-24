@@ -118,7 +118,8 @@ const initModels = () => {
     FeaturesModel.hasMany(FeaturesContentModel,{
         as: "contents",
         foreignKey: "feature_id",
-        sourceKey: "id"
+        sourceKey: "id",
+        onDelete: "CASCADE"
     })
     FeaturesContentModel.belongsTo(FeaturesModel, {
         as: "feature",

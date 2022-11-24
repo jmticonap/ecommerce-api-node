@@ -7,6 +7,7 @@ const initModels = require("./src/models/initModel")
 const userRouter = require("./src/routers/users.route")
 const categoryRouter = require("./src/routers/categories.route")
 const productRouter = require("./src/routers/products.route")
+const featureRoute = require("./src/routers/features.route")
 
 const app = express()
 
@@ -35,6 +36,7 @@ app.get("/", (req, res, next) => {
 app.use("/api/v1", userRouter)
 app.use("/api/v1", categoryRouter)
 app.use("/api/v1", productRouter)
+app.use("/api/v1", featureRoute)
 
 app.use(errorHandler)
 
