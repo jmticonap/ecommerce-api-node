@@ -1,11 +1,13 @@
-const UserModel = require("./users.model")
-const CategoriesModel = require("./categories.model")
+const UserModel = require("./users.model") //
+const CategoriesModel = require("./categories.model") //
 const ProductModel = require("./products.model")
 const CartsModel = require("./carts.model")
 const CartDetailsModel = require("./cartDetails.model")
 const DeliverDataModel = require("./deliverData.model")
 const WishListModel = require("./wishList.model")
 const FeaturesModel = require("./features.model")
+const FeaturesContentModel = require("./featuresContent.model")
+const ProductFeaturesModel = require("./productFeatures.model")
 const ProductImagesModel = require("./productImages.model")
 const BuyModel = require("./buy.model")
 const PriceModel = require("./price.model")
@@ -102,12 +104,26 @@ const initModels = () => {
      * ************* PRODUCT <--[product_feature]--> FEATURES *************
      */
     ProductModel.belongsToMany(FeaturesModel, {
-        through: "product_feature",
+        through: ProductFeaturesModel,
         as: "productFeatures"
     })
     FeaturesModel.belongsToMany(ProductModel, {
-        through: "product_feature",
+        through: ProductFeaturesModel,
         as: "productFeatures"
+    })
+
+    /**
+     * ************* FEATURES <----> FEATURES_CONTENT *************
+     */
+    FeaturesModel.hasMany(FeaturesContentModel,{
+        as: "contents",
+        foreignKey: "feature_id",
+        sourceKey: "id"
+    })
+    FeaturesContentModel.belongsTo(FeaturesModel, {
+        as: "feature",
+        foreignKey: "feature_id",
+        targetKey: "id"
     })
 
 

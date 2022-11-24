@@ -1,14 +1,14 @@
 const db = require("../database/database")
 const { DataTypes } = require("sequelize")
 
-const FeaturesModel = db.define("features", {
+const FeaturesContentModel = db.define("features_content", {
   id: {
     type: DataTypes.BIGINT,
     allowNull: false,
     primaryKey: true,
     autoIncrement: true
   },
-  name: {
+  content: {
     type: DataTypes.STRING(255),
     allowNull: false
   }
@@ -16,4 +16,4 @@ const FeaturesModel = db.define("features", {
   timestamps: false
 })
 
-module.exports = FeaturesModel
+module.exports = FeaturesContentModel
