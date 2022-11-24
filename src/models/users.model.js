@@ -12,10 +12,7 @@ const UserModel = db.define("user", {
   email: {
     type: DataTypes.STRING(255),
     allowNull: false,
-    unique: true,
-    validate: {
-      email: true
-    }
+    unique: true
   },
   name: {
     type: DataTypes.STRING(255),

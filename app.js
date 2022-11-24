@@ -4,6 +4,8 @@ const db = require("./src/database/database")
 const errorHandler = require("./src/middlewares/error.middleware")
 const initModels = require("./src/models/initModel")
 
+const userRouter = require("./src/routers/users.route")
+
 const app = express()
 
 app.use(express.json())
@@ -27,6 +29,8 @@ app.get("/", (req, res, next) => {
     })
     res.end()
 })
+
+app.use("/api/v1", userRouter)
 
 app.use(errorHandler)
 
