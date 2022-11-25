@@ -1,6 +1,6 @@
 const UserModel = require("./users.model") //
 const CategoriesModel = require("./categories.model") //
-const ProductModel = require("./products.model")
+const ProductModel = require("./products.model") // [addFeatures, setCategory]
 const CartsModel = require("./carts.model")
 const CartDetailsModel = require("./cartDetails.model")
 const DeliverDataModel = require("./deliverData.model")
@@ -45,31 +45,15 @@ const initModels = () => {
     
 
     /**
-     * ************* CART <----> CART_DETAIL *************
+     * ************* CART <--[CartDetailsModel]--> PRODUCT *************
      */
-    CartsModel.hasMany(CartDetailsModel, {
-        as: "details",
-        foreignKey: "cart_id",
-        sourceKey: "id"
+    CartsModel.belongsToMany(ProductModel, {
+        through: CartDetailsModel,
+        as: "cartProducts"
     })
-    CartDetailsModel.belongsTo(CartsModel, {
-        as: "cart",
-        foreignKey: "cart_id",
-        targetKey: "id"
-    })
-
-    /**
-     * ************* PRODUCT <----> CART_DETAIL *************
-     */
-    ProductModel.hasMany(CartDetailsModel, {
-        as: "cartDetails",
-        foreignKey: "product_id",
-        sourceKey: "id"
-    })
-    CartDetailsModel.belongsTo(ProductModel, {
-        as: "product",
-        foreignKey: "product_id",
-        targetKey: "id"
+    ProductModel.belongsToMany(CartsModel, {
+        through: CartDetailsModel,
+        as: "cartProducts"
     })
 
 

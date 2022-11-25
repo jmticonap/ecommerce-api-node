@@ -58,9 +58,8 @@ const featuresService = {
 
             await feature.update(req.body)
             await feature.save()
-            await feature.reload()
 
-            return feature
+            return await feature.reload()
         } catch (error) {
             throw (error)
         }

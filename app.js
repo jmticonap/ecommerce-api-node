@@ -5,9 +5,13 @@ const errorHandler = require("./src/middlewares/error.middleware")
 const initModels = require("./src/models/initModel")
 
 const userRouter = require("./src/routers/users.route")
+const authRouter = require("./src/routers/auth.route")
 const categoryRouter = require("./src/routers/categories.route")
 const productRouter = require("./src/routers/products.route")
-const featureRoute = require("./src/routers/features.route")
+const featureRouter = require("./src/routers/features.route")
+const cartRouter = require("./src/routers/cart.route")
+
+const authenticate = require("./src/middlewares/auth.middleware")
 
 const app = express()
 
@@ -31,12 +35,16 @@ app.get("/", (req, res, next) => {
         message: "hello world"
     })
     res.end()
+    next()
 })
 
 app.use("/api/v1", userRouter)
-app.use("/api/v1", categoryRouter)
-app.use("/api/v1", productRouter)
-app.use("/api/v1", featureRoute)
+app.use("/api/v1", authRouter)
+app.use("/api/v1", authenticate, categoryRouter)
+app.use("/api/v1", authenticate, productRouter)
+app.use("/api/v1", authenticate, featureRouter)
+app.use("/api/v1", authenticate, cartRouter)
+
 
 app.use(errorHandler)
 
