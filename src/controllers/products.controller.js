@@ -27,6 +27,19 @@ const productsController = {
             })
         }
     },
+    addFeatures: async (req, res, next) => {
+        try {
+            res
+                .status(201)
+                .json(await productsService.addFeatures(req))
+        } catch (error) {
+            next({
+                status: 418,
+                errorContent: error,
+                message: ""
+            })
+        }
+    },
     create: async (req, res, next) => {
         try {
             res

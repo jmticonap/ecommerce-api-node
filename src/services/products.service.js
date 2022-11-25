@@ -1,11 +1,14 @@
 const ProductModel = require("../models/products.model")
 const CategoriesModel = require("../models/categories.model")
+const FeaturesModel = require("../models/features.model")
+const FeaturesContentModel = require("../models/featuresContent.model")
+const ProductFeaturesModel = require("../models/productFeatures.model")
 
 const productsService = {
     create: async (req) => {
         try {
             const isCategory = req.body.hasOwnProperty('category')
-            console.log(`isCateogry: ${isCategory? "true":"false"}`)
+            console.log(`isCateogry: ${isCategory ? "true" : "false"}`)
             return ProductModel.create(req.body, (isCategory) && {
                 include: [
                     isCategory && {
@@ -21,7 +24,7 @@ const productsService = {
     findAll: async (req) => {
         try {
             return ProductModel.findAll({
-                order:[
+                order: [
                     ["id"]
                 ]
             })
@@ -32,7 +35,66 @@ const productsService = {
     findById: async (req) => {
         try {
             const { id } = req.params
-            return ProductModel.findByPk(id)
+            return ProductModel.findByPk(id, {
+                include: {
+                    model: FeaturesModel,
+                    as: "productFeatures"
+                }
+            })
+        } catch (error) {
+            throw (error)
+        }
+    },
+    addFeatures: async (req) => {
+        try {
+            //id: for the product
+            const { id } = req.params
+            const product = await ProductModel.findByPk(id, {
+                include: {
+                    model: FeaturesModel,
+                    as: "productFeatures"
+                }
+            })
+            /**
+             * JSON structure
+             * [
+             *  {
+             *      "content":"core i7", 
+             *      "featureId": 1
+             *  }
+             * ]
+             * 
+             */
+            const productFeatures = req.body
+
+            productFeatures.forEach(async productFeature => {
+                const { content, featureId } = productFeature
+                const feature = await FeaturesModel.findByPk(featureId, {
+                    include: [
+                        {
+                            model: FeaturesContentModel,
+                            as: "contents"
+                        }
+                    ]
+                })
+
+                //check that "content" is the list of feature
+                if (!await feature["contents"].some(itm => itm.content == content))
+                    throw ("The content is not in the feature allowed terms")
+
+                await product.addProductFeature(feature, {
+                    through: { content }
+                })
+            })
+
+            product.reload({
+                include: {
+                    model: FeaturesModel,
+                    as: "productFeatures"
+                }
+            })
+
+            return product
         } catch (error) {
             throw (error)
         }
