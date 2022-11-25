@@ -36,10 +36,17 @@ const productsService = {
         try {
             const { id } = req.params
             return ProductModel.findByPk(id, {
-                include: {
-                    model: FeaturesModel,
-                    as: "productFeatures"
-                }
+                include: [
+                    {
+                        model: FeaturesModel,
+                        as: "productFeatures"
+                    },
+                    {
+                        model: CategoriesModel,
+                        as: "category"
+                    }
+
+                ]
             })
         } catch (error) {
             throw (error)
@@ -67,7 +74,7 @@ const productsService = {
              */
             const productFeatures = req.body
 
-            productFeatures.forEach(async productFeature => {
+            const productFeaturesIterator = async productFeature => {
                 const { content, featureId } = productFeature
                 const feature = await FeaturesModel.findByPk(featureId, {
                     include: [
@@ -85,7 +92,9 @@ const productsService = {
                 await product.addProductFeature(feature, {
                     through: { content }
                 })
-            })
+            }
+            //TODO: throw is no correct
+            productFeatures.forEach(productFeaturesIterator)
 
             product.reload({
                 include: {
@@ -95,6 +104,25 @@ const productsService = {
             })
 
             return product
+        } catch (error) {
+            throw (error)
+        }
+    },
+    setCategory: async (req) => {
+        try {
+            const { id } = req.params
+            const { categoryId } = req.body
+            const product = await ProductModel.findByPk(id, {
+                include: {
+                    model: CategoriesModel,
+                    as: "category"
+                }
+            })
+            const category = await CategoriesModel.findByPk(categoryId)
+
+            await product.setCategory(category)
+
+            return await product.reload()
         } catch (error) {
             throw (error)
         }

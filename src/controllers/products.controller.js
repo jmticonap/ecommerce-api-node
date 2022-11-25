@@ -40,6 +40,19 @@ const productsController = {
             })
         }
     },
+    setCategory: async (req, res, next) => {
+        try {
+            res
+                .status(200)
+                .json(await productsService.setCategory(req))
+        } catch (error) {
+            next({
+                status: 418,
+                errorContent: error,
+                message: ""
+            })
+        }
+    },
     create: async (req, res, next) => {
         try {
             res
