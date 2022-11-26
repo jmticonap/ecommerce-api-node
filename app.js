@@ -13,6 +13,8 @@ const cartRouter = require("./src/routers/cart.route")
 
 const authenticate = require("./src/middlewares/auth.middleware")
 
+const initData = require("./src/seeders/initData")
+
 const app = express()
 
 app.use(express.json())
@@ -26,7 +28,11 @@ db.authenticate()
     .catch(error => console.log(error))
 
 db.sync({ force: true })
-    .then(() => console.log("DB schema created successfully."))
+    .then(() => {
+        console.log("DB schema created successfully.")
+        //LOADING INIT DB DATA
+        initData(db)
+    })
     .catch(error => console.log(error))
 
 

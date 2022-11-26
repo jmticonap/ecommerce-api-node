@@ -28,6 +28,19 @@ const cartsController = {
             })
         }
     },
+    updateProductInCart: async (req, res, next) => {
+        try {
+            res
+                .status(200)
+                .json(await cartsService.updateProductInCart(req))
+        } catch (error) {
+            next({
+                status: 418,
+                errorContent: error,
+                message: ""
+            })
+        }
+    },
     findAll: async (req, res, next) => {
         try {
 

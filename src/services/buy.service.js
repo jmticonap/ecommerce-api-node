@@ -1,8 +1,10 @@
+const db = require("../database/database")
 const BuyModel = require("../models/buy.model")
 const ProductModel = require("../models/products.model")
 
 const buyService = {
     buy: async req => {
+        const t = await db.transaction()
         try {
             /**
              * request structure
@@ -17,7 +19,7 @@ const buyService = {
             const products = await ProductModel.findAll({
                 where: { id: savedBuyProductId },
                 include: { model: BuyModel, as: "buy"}
-            })
+            }, {transaction: t})
             products.forEach(async (product, i) => {
                 product.stock += buyProducts[i].quantity
 
@@ -25,9 +27,12 @@ const buyService = {
                 await product.save()
                 await product.reload()
             })
-            return await ProductModel.findAll({
-                where: { id: savedBuyProductId }
-            }) 
+
+            await t.commit()
+
+            return await BuyModel.findAll({
+                where: { product_id: savedBuyProductId }
+            })
         } catch (error) {
             throw (error)
         }

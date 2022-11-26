@@ -55,6 +55,8 @@ const initModels = () => {
         through: CartDetailsModel,
         as: "cartProducts"
     })
+    CartDetailsModel.belongsTo(CartsModel,{as: "cart"})
+    CartDetailsModel.belongsTo(ProductModel,{as: "product"})
 
 
     /**

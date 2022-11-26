@@ -69,12 +69,11 @@ const productsController = {
     },
     buy: async (req, res, next) => {
         try {
-            req["buys"] = []
             const buys = await buyService.buy(req)
 
             res
                 .status(200)
-                .json(req["buys"])
+                .json(buys)
         } catch (error) {
             next({
                 status: 418,

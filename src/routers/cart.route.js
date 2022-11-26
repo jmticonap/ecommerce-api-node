@@ -8,5 +8,7 @@ router.get("/carts", cartsController.findAll)
 router.get("/carts/:id", cartsController.findById)
 router.post("/carts", cartsController.create)
 router.patch("/cart/add_products", cartsController.addProducts)
+router.patch("/cart/update_products", cartsController.updateProductInCart)
+
 
 module.exports = router
