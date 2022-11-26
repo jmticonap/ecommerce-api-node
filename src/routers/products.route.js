@@ -27,12 +27,28 @@ const router = Router()
  *         name: Redmi 8
  *         description: Xiaomi Redmi 8 smarthphone
  *         stock: 0
- *   
- * 
  * 
  */
 
+/**
+ * @swagger
+ * /api/v1/products:
+ *   get:
+ *     summary: list of all products
+ *     tags: [Product]
+ *     responses:
+ *       200:
+ *         description: all list was fetched
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items: 
+ *                 $ref: '#/components/schemas/Product'
+ *                 
+ */
 router.get("/products", productsController.findAll)
+
 router.get("/products/:id", productsController.findById)
 router.get("/products/:id/buy", productsController.findBuyByProduct)
 router.post("/products", productsController.create)

@@ -33,7 +33,37 @@ const router = Router()
  * 
  */
 
+
+/**
+ * @swagger
+ * /api/v1/users:
+ *   get:
+ *     summary: list of all users
+ *     tags: [User]
+ *     requestBody:
+ *       required: false
+ *     responses:
+ *       200:
+ *         description: all the list was fetched
+ */
 router.get("/users", userController.findAll)
+/**
+ * @swagger
+ * /api/v1/users:
+ *   post:
+ *     summary: create new user
+ *     tags: [User]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             $ref: '#/components/schemas/User'
+ *     responses:
+ *       200:
+ *         description: new user created successfuly
+ */
 router.post("/users", userController.create)
 
 module.exports = router
