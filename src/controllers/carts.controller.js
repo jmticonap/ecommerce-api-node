@@ -41,6 +41,33 @@ const cartsController = {
             })
         }
     },
+    deleteProductInCart: async (req, res, next) => {
+        try {
+            await cartsService.deleteProductInCart(req)
+            res
+                .status(200)
+                .end()
+        } catch (error) {
+            next({
+                status: 418,
+                errorContent: error,
+                message: ""
+            })
+        }
+    },
+    purchase: async (req, res, next) => {
+        try {
+            res
+                .status(201)
+                .json(await cartsService.purchase(req))
+        } catch (error) {
+            next({
+                status: 418,
+                errorContent: error,
+                message: ""
+            })
+        }
+    },
     findAll: async (req, res, next) => {
         try {
 

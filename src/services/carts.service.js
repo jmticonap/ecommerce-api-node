@@ -23,7 +23,6 @@ const cartsService = {
         }
     },
     addProducts: async req => {
-
         try {
             const t = await db.transaction()
 
@@ -40,16 +39,14 @@ const cartsService = {
                 where: { id: productsId }
             });
 
-            const bulkData = productsForCart.map( p => {
+            const bulkData = productsForCart.map(p => {
                 const cartProductsItem = cartProducts.find(cp => cp.productId == p.id)
-                return (
-                    {
-                        price: cartProductsItem.price,
-                        quantity: cartProductsItem.quantity,
-                        productId: p.id,
-                        cartId: active_cart.id
-                    }
-                )
+                return ({
+                    price: cartProductsItem.price,
+                    quantity: cartProductsItem.quantity,
+                    productId: p.id,
+                    cartId: active_cart.id
+                })
             })
             const result = await CartDetailsModel.bulkCreate(
                 bulkData,
@@ -63,28 +60,8 @@ const cartsService = {
             )
 
             await t.commit()
-            // cartProducts.forEach(async cartProduct => {
-            //     /**
-            //      * cartProduct:
-            //      * {
-            //      *  "productId": 1,
-            //      *  "price": 20.5,
-            //      *  "quantity": 10
-            //      * }
-            //      */
-            //     const product = await ProductModel.findByPk(
-            //         cartProduct.productId, {
-            //         include: "cartProducts"
-            //     })
-            //     await active_cart.addCartProduct(product, {
-            //         through: {
-            //             price: cartProduct.price,
-            //             quantity: cartProduct.quantity
-            //         }
-            //     })
-            // })
 
-            return result//await active_cart.reload()
+            return result
         } catch (error) {
             throw (error)
         }
@@ -110,7 +87,7 @@ const cartsService = {
             const productsInCart = await CartDetailsModel.findAll({
                 where: { cartId: activeCart.id }
             }, { transaction: t })
-            //cart_details.quantity
+
             toUpdateData.forEach(data => {
                 const pInCart = productsInCart.find(p => p.productId == data.productId)
                 if (pInCart) {
@@ -123,6 +100,67 @@ const cartsService = {
 
             return productsInCart
         } catch (error) {
+            throw (error)
+        }
+    },
+    deleteProductInCart: async req => {
+        try {
+            const t = await db.transaction()
+            const { productId } = req.params
+            const user = await UserModel.findByPk(req.user.id)
+            const activeCart = await CartsModel.findOne({
+                where: {
+                    user_id: user.id,
+                    isPurchased: false
+                }
+            })
+            const productsInCart = await CartDetailsModel.findAll({
+                where: { cartId: activeCart.id }
+            }, { transaction: t })
+
+            productsInCart.find(pic => pic.productId == productId).destroy()
+
+            await t.commit()
+            return true
+        } catch (error) {
+            throw (error)
+        }
+    },
+    purchase: async req => {
+        const t = await db.transaction()
+        try {
+            const user = await UserModel.findByPk(req.user.id)
+            const activeCart = await CartsModel.findOne({
+                where: {
+                    user_id: user.id,
+                    isPurchased: false
+                },
+                include: { 
+                    model: ProductModel, 
+                    as: "cartProducts" 
+                },
+                transaction: t
+            })
+            const productsInCart = await CartDetailsModel.findAll({
+                where: { cartId: activeCart.id }
+            })
+            productsInCart.forEach(async pic => {
+                const product = await ProductModel.findOne({
+                    where: { id: pic.productId },
+                    transaction: t
+                })
+                product.stock -= pic.quantity
+                await product.save()
+            })
+
+            activeCart.isPurchased = true
+            await activeCart.save()
+
+            await t.commit()
+
+            return await activeCart.reload()
+        } catch (error) {
+            await t.rollback()
             throw (error)
         }
     },
