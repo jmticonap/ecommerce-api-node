@@ -42,7 +42,7 @@ const initModels = () => {
         foreignKey: "user_id",
         targetKey: "id"
     })
-    
+
 
     /**
      * ************* CART <--[CartDetailsModel]--> PRODUCT *************
@@ -99,7 +99,7 @@ const initModels = () => {
     /**
      * ************* FEATURES <----> FEATURES_CONTENT *************
      */
-    FeaturesModel.hasMany(FeaturesContentModel,{
+    FeaturesModel.hasMany(FeaturesContentModel, {
         as: "contents",
         foreignKey: "feature_id",
         sourceKey: "id",
@@ -130,7 +130,7 @@ const initModels = () => {
     /**
      * ************* PRODUCT <----> BUY *************
      */
-     ProductModel.hasMany(BuyModel, {
+    ProductModel.hasMany(BuyModel, {
         as: "buy",
         foreignKey: "product_id",
         sourceKey: "id"
@@ -145,7 +145,7 @@ const initModels = () => {
     /**
      * ************* PRODUCT <----> PRICE *************
      */
-     ProductModel.hasMany(PriceModel, {
+    ProductModel.hasMany(PriceModel, {
         as: "price",
         foreignKey: "product_id",
         sourceKey: "id"

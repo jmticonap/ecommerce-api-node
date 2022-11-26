@@ -1,4 +1,5 @@
 const productsService = require("../services/products.service")
+const buyService = require("../services/buy.service")
 
 const productsController = {
     findAll: async (req, res, next) => {
@@ -58,6 +59,35 @@ const productsController = {
             res
                 .status(201)
                 .json(await productsService.create(req))
+        } catch (error) {
+            next({
+                status: 418,
+                errorContent: error,
+                message: ""
+            })
+        }
+    },
+    buy: async (req, res, next) => {
+        try {
+            req["buys"] = []
+            const buys = await buyService.buy(req)
+
+            res
+                .status(200)
+                .json(req["buys"])
+        } catch (error) {
+            next({
+                status: 418,
+                errorContent: error,
+                message: ""
+            })
+        }
+    },
+    findBuyByProduct: async (req, res, next) => {
+        try {
+            res
+                .status(200)
+                .json(await buyService.findBuyByProduct(req))
         } catch (error) {
             next({
                 status: 418,
