@@ -27,7 +27,9 @@ const CartDetailsModel = db.define("cart_details", {
 }, {
   timestamps: false,
   hooks: {
-
+    beforeCreate: (detail, options) => {
+      //TODO: verify Cart['is_purchased'] = false oder wise it can't be modifay the cart
+    }
   }
 })
 

@@ -8,9 +8,10 @@ const CartsModel = db.define("carts", {
     primaryKey: true,
     autoIncrement: true
   },
-  is_purchased: {
+  isPurchased: {
     type: DataTypes.BOOLEAN,
-    allowNull: true
+    allowNull: false,
+    defaultValue: false
   }
 })
 
