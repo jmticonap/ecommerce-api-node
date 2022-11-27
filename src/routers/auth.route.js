@@ -12,7 +12,6 @@ const router = Router();
  *       type: http
  *       scheme: bearer
  *       bearerFormat: JWT
- *       in: header
  *   schemas:
  *     Auth:
  *       type: object

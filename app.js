@@ -38,27 +38,26 @@ const app = express()
 app.use(express.json())
 app.use(cors())
 
-
-initModels()
-
-db.authenticate()
-    .then(() => console.log("Successfull DB authentication."))
-    .catch(error => console.log(error))
-
-db.sync({ force: true })
+Promise
+    .all([initModels(), db.authenticate()])
     .then(() => {
-        console.log("DB schema created successfully.")
-        //LOADING INIT DB DATA
+        console.log("initModels\t ...done\n", "\bdb.authenticate\t ...done")
+        return db.sync({ force: true })
+    })
+    .then(() => {
+        console.log("db.sync\t\t ...done")
         initData(db)
     })
-    .catch(error => console.log(error))
-
+    .catch(error => {
+        console.error(error)
+    })
 
 app.get("/", (req, res, next) => {
-    res.json({
-        message: "hello world"
-    })
-    res.end()
+    res
+        .status(200)
+        .json({
+            message: "hello world"
+        })
     next()
 })
 

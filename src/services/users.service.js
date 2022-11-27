@@ -3,7 +3,9 @@ const UserModel = require("../models/users.model")
 const userService = {
     create: async (req) => {
         try {
-            return UserModel.create(req.body)
+            const user = await UserModel.create(req.body)
+            
+            return user
         } catch (error) {
             throw (error)
         }
