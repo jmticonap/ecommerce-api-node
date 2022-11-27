@@ -4,8 +4,12 @@ const userService = {
     create: async (req) => {
         try {
             const user = await UserModel.create(req.body)
-            
-            return user
+
+            return await UserModel.findByPk(user.id, {
+                attributes: {
+                    exclude: ["password"]
+                }
+            })
         } catch (error) {
             throw (error)
         }

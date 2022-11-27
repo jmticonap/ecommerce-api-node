@@ -1,5 +1,6 @@
 const supertest = require("supertest")
 const app = require("../../app")
+const server = require("../../server")
 const UserModel = require("../models/users.model")
 
 const api = supertest(app)
@@ -16,9 +17,12 @@ describe("Unit Test: USER_MODEL", () => {
 
 })
 
+
 beforeAll(async () => {
 
 })
+
+
 
 describe("End-Point: [USER]", () => {
     test("Path: GET->/api/v1/users [make sure Content-Typye=application/json]", async () => {
@@ -28,19 +32,29 @@ describe("End-Point: [USER]", () => {
             .expect("Content-Type", /application\/json/)
     })
 
-    test("Path: POST->/api/v1/users [make sure user is created and Content-Type=application/json]", async () => {
-        await api
-            .post("/api/v1/users")
-            .send({
-                "email": "jm.ticona.pacheco@gmail.com",
-                "name": "Juan Manuel Ticona Pacheco",
-                "password": "1234"
-            })
-            .set('Accept', 'application/json')
-            .expect('Content-Type', /json/)
-            .expect(200)
+    test(
+        `Path: POST->/api/v1/users 
+        - make sure user is created
+        - Content-Type=application/json
+        - password field isn't present in response`,
+        async () => {
+            const response = await api
+                .post("/api/v1/users")
+                .send({
+                    "email": "jm.ticona.pacheco@gmail.com",
+                    "name": "Juan Manuel Ticona Pacheco",
+                    "password": "1234"
+                })
+                .set('Accept', 'application/json')
 
-    })
+            
+            expect(response.headers["content-type"]).toMatch(/application\/json/);
+            expect(response.status).toEqual(200);
+            expect(response.body).not.toHaveProperty('password');
+
+        })
 })
 
-
+afterAll(() => {
+    server.close()
+})
