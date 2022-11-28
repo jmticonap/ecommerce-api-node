@@ -1,9 +1,14 @@
 const supertest = require("supertest")
 const app = require("../../app")
 const server = require("../../server")
+const db = require("../database/database")
 const UserModel = require("../models/users.model")
 
 const api = supertest(app)
+
+beforeAll(async () => {
+    await db.sync({force:true})
+})
 
 describe("Unit Test: USER_MODEL", () => {
     test("Creatting a new user", async () => {
@@ -16,13 +21,6 @@ describe("Unit Test: USER_MODEL", () => {
     })
 
 })
-
-
-beforeAll(async () => {
-
-})
-
-
 
 describe("End-Point: [USER]", () => {
     test("Path: GET->/api/v1/users [make sure Content-Typye=application/json]", async () => {

@@ -5,7 +5,7 @@ const authController = {
         try {
             // email y password
             const credentials = req.body;
-            const result = await authService.authenticate(credentials);
+            const result = await authService.authenticate(credentials)
             // false --> no era contraseña invalida
             // null --> no se encuentra al usuario
             // { isValid, result }

@@ -1,6 +1,7 @@
 
 const UserModel = require("../models/users.model")
 const ProductModel = require("../models/products.model")
+const BuyModel = require("../models/buy.model")
 
 
 const initData = async (db) => {
@@ -23,6 +24,12 @@ const initData = async (db) => {
             "name": "laptop",
             "description": "Lenovo ideapad 5"
         }
+    ], { transaction: t })
+
+    await BuyModel.bulkCreate([
+        {quantity: 30, product_id: 1},
+        {quantity: 40, product_id: 2},
+        {quantity: 30, product_id: 3}
     ], { transaction: t })
     
     await t.commit()

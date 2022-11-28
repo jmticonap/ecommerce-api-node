@@ -22,8 +22,11 @@ const authService = {
     },
     genToken: data => {
         try {
-            const token = jwt.sign(data, process.env.SECRET, {
-                expiresIn: "2h",
+            const {id, name, email} = data
+            const token = jwt.sign(
+                {id, name, email}, 
+                process.env.SECRET, {
+                expiresIn: "4h",
                 algorithm: "HS512",
             });
             return token;
