@@ -4,6 +4,8 @@ const cors = require('cors')
 const db = require('./src/database/database')
 const errorHandler = require('./src/middlewares/error.middleware')
 const initModels = require('./src/models/initModel')
+const compression = require('compression')
+const helmet = require('helmet')
 
 const userRouter = require('./src/routers/users.route')
 const authRouter = require('./src/routers/auth.route')
@@ -35,8 +37,10 @@ const swaggerSpecs = {
 
 const app = express()
 
-app.use(express.json())
 app.use(cors())
+app.use(helmet())
+app.use(express.json())
+app.use(compression())
 
 Promise
   .all([initModels(), db.authenticate()])
@@ -48,7 +52,7 @@ Promise
   })
   .then(() => {
     console.log('db.sync\t\t ...done')
-    initData(db)
+    process.env.NODE_ENV !== 'pro' && initData(db)
   })
   .catch(error => {
     console.error(error)
