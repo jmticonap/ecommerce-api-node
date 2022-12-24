@@ -13,8 +13,7 @@ const BuyModel = require("./buy.model")
 const PriceModel = require("./price.model")
 
 
-const initModels = function () {
-
+const initModels = () => {
     /**
      * ************* PRODUCT <----> CATEGORY *************
      */

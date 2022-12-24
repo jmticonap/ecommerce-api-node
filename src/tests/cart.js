@@ -10,25 +10,25 @@ const api = supertest(app)
 test(`GET->/api/v1/cart
 - Get active card
 `, async () => {
-    const token = `Bearer ${await testUtil.getTestActiveToken()}`
-    const responseActiveCart = await api
-        .get("/api/v1/cart")
-        .set('Authorization', token)
-    expect(responseActiveCart.type).toBe("application/json")
-    expect(responseActiveCart.body.isPurchased).toEqual(false)
+  const token = `Bearer ${await testUtil.getTestActiveToken()}`
+  const responseActiveCart = await api
+    .get("/api/v1/cart")
+    .set('Authorization', token)
+  expect(responseActiveCart.type).toBe("application/json")
+  expect(responseActiveCart.body.isPurchased).toEqual(false)
 })
 
 test(`PATCH->/api/v1/cart/add_products
 - Add products to he cart
 `, async () => {
-    const token = `Bearer ${await testUtil.getTestActiveToken()}`
+  const token = `Bearer ${await testUtil.getTestActiveToken()}`
 })
 
 
 beforeAll(async () => {
-    await db.authenticate()
-    await db.sync({ force: true })
-    await initData(db)
+  await db.authenticate()
+  await db.sync({ force: true })
+  await initData(db)
 })
 
 // afterAll(async () => {
